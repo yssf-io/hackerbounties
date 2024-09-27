@@ -6,6 +6,21 @@ import { useReadContract } from "wagmi";
 
 const POAP_CONTRACT: `0x${string}` =
   "0x22C1f6050E56d2876009903609a2cC3fEf83B415";
+const HACKER_PACK_CONTRACT: `0x${string}` =
+  "0x32382a82d9faDc55f971f33DaEeE5841cfbADbE0";
+const ALCHEMY_API_KEY = "xuXS9MBUWVvB6Xsh9XIN00spOReFm0Jy";
+
+const isHackerPackHolder = async (wallet: string) => {
+  const url = `https://opt-mainnet.g.alchemy.com/nft/v3/${ALCHEMY_API_KEY}/isHolderOfContract?wallet=${wallet}&contractAddress=${HACKER_PACK_CONTRACT}`;
+  const request = await fetch(url, {
+    method: "GET",
+    headers: { accept: "application/json" },
+  });
+  const response = await request.json();
+  return response.isHolderOfContract === true;
+};
+
+// Hacker Pack contract address
 
 const Poaps = ({ address }: { address: `0x${string}` }) => {
   const { data } = useReadContract({
@@ -16,6 +31,7 @@ const Poaps = ({ address }: { address: `0x${string}` }) => {
     chainId: gnosis.id,
   });
   const [poaps, setPoaps] = useState<any[]>([]);
+  const [hackerPack, setHackerPack] = useState(false);
 
   const fetchPoaps = async (amount: number) => {
     const pc = createPublicClient({
@@ -54,25 +70,33 @@ const Poaps = ({ address }: { address: `0x${string}` }) => {
       )
     ).filter((p) => p !== undefined);
 
-    console.log({ poaps });
     setPoaps(poaps);
+
+    setHackerPack(await isHackerPackHolder(address));
   };
 
   useEffect(() => {
-    console.log({ data });
-
     if (data) {
       fetchPoaps(parseInt(data.toString()));
     }
   }, [data]);
 
   return (
-    <div className="flex justify-center mt-16">
-      {poaps.map((p) => (
-        <div key={p.name} className="mx-8">
-          <img src={p.image_url} alt={p.name} width={256} height={256} />
-        </div>
-      ))}
+    <div>
+      <p className="mt-16 text-left ml-8 text-xl font-bold">
+        Hacker Pack {hackerPack ? "✅" : "❌"}
+      </p>
+
+      <p className="mt-16 text-left ml-8 mb-8 text-xl font-bold">
+        ETHGlobal POAPs
+      </p>
+      <div className="flex justify-center">
+        {poaps.map((p) => (
+          <div key={p.name} className="mx-8">
+            <img src={p.image_url} alt={p.name} width={256} height={256} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
