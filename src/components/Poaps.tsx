@@ -3,6 +3,36 @@ import { useEffect, useState } from "react";
 import { createPublicClient, http, parseAbi } from "viem";
 import { gnosis } from "viem/chains";
 import { useReadContract } from "wagmi";
+import BountyInfo from "./BountyInfo";
+
+export interface IBountyInfo {
+  description: string;
+  rewardAmount: number;
+  rewardToken: string;
+  from: string;
+}
+const MOCK_BOUNTIES: IBountyInfo[] = [
+  {
+    description: "Build a Dune dashboard showing the revenue growth of AaveV3",
+    rewardAmount: 1000,
+    rewardToken: "GHO",
+    from: "Aave Governance",
+  },
+  {
+    description:
+      "Write a guide (with a working example on Github) about using Uniswap Hooks",
+    rewardAmount: 100,
+    rewardToken: "UNI",
+    from: "Uniswap Labs",
+  },
+  {
+    description:
+      "Integrate Circle's Programmable Wallets to your product (>100 DAU)",
+    rewardAmount: 3000,
+    rewardToken: "USDC",
+    from: "Circle",
+  },
+];
 
 const POAP_CONTRACT: `0x${string}` =
   "0x22C1f6050E56d2876009903609a2cC3fEf83B415";
@@ -83,9 +113,18 @@ const Poaps = ({ address }: { address: `0x${string}` }) => {
 
   return (
     <div>
-      <p className="mt-16 text-left ml-8 text-xl font-bold">
-        Hacker Pack {hackerPack ? "✅" : "❌"}
-      </p>
+      <div className="mt-16 mx-8">
+        <p className="mb-8 text-left text-xl font-bold">
+          Hacker Pack {hackerPack ? "✅" : "❌"}
+        </p>
+
+        <p className="text-gray-700 italic text-left">
+          These are mock bounties
+        </p>
+        {MOCK_BOUNTIES.map((bounty) => (
+          <BountyInfo key={bounty.description} {...bounty} />
+        ))}
+      </div>
 
       <p className="mt-16 text-left ml-8 mb-8 text-xl font-bold">
         ETHGlobal POAPs

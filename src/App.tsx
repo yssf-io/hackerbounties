@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div className="h-screen">
-      <h1 className="text-3xl pt-6 font-light">hackchat</h1>
+      <h1 className="text-3xl pt-6 font-light">hacker bounties</h1>
 
       {account.address ? (
         <div>
