@@ -4,6 +4,7 @@ import { createPublicClient, http, parseAbi } from "viem";
 import { gnosis } from "viem/chains";
 import { useReadContract } from "wagmi";
 import BountyInfo from "./BountyInfo";
+import { supabase } from "../supabase";
 
 export interface IBountyInfo {
   description: string;
@@ -11,28 +12,6 @@ export interface IBountyInfo {
   rewardToken: string;
   from: string;
 }
-const MOCK_BOUNTIES: IBountyInfo[] = [
-  {
-    description: "Build a Dune dashboard showing the revenue growth of AaveV3",
-    rewardAmount: 1000,
-    rewardToken: "GHO",
-    from: "Aave Governance",
-  },
-  {
-    description:
-      "Write a guide (with a working example on Github) about using Uniswap Hooks",
-    rewardAmount: 100,
-    rewardToken: "UNI",
-    from: "Uniswap Labs",
-  },
-  {
-    description:
-      "Integrate Circle's Programmable Wallets to your product (>100 DAU)",
-    rewardAmount: 3000,
-    rewardToken: "USDC",
-    from: "Circle",
-  },
-];
 
 const POAP_CONTRACT: `0x${string}` =
   "0x22C1f6050E56d2876009903609a2cC3fEf83B415";
@@ -62,6 +41,7 @@ const Poaps = ({ address }: { address: `0x${string}` }) => {
   });
   const [poaps, setPoaps] = useState<any[]>([]);
   const [hackerPack, setHackerPack] = useState(false);
+  const [bounties, setBounties] = useState<IBountyInfo[]>([]);
 
   const fetchPoaps = async (amount: number) => {
     const pc = createPublicClient({
@@ -105,9 +85,27 @@ const Poaps = ({ address }: { address: `0x${string}` }) => {
     setHackerPack(await isHackerPackHolder(address));
   };
 
+  const fetchBounties = async () => {
+    const { data: bountiesDb } = await supabase.from("bounties").select();
+
+    if (!bountiesDb) return;
+
+    setBounties(
+      bountiesDb.map(({ description, rewardToken, rewardAmount, from }) => {
+        return {
+          description,
+          rewardAmount,
+          rewardToken,
+          from,
+        };
+      }),
+    );
+  };
+
   useEffect(() => {
     if (data) {
       fetchPoaps(parseInt(data.toString()));
+      fetchBounties();
     }
   }, [data]);
 
@@ -121,7 +119,7 @@ const Poaps = ({ address }: { address: `0x${string}` }) => {
         <p className="text-gray-700 italic text-left">
           These are mock bounties
         </p>
-        {MOCK_BOUNTIES.map((bounty) => (
+        {bounties.map((bounty) => (
           <BountyInfo key={bounty.description} {...bounty} />
         ))}
       </div>
