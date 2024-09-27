@@ -5,14 +5,18 @@ import "./index.css";
 import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { WagmiProvider } from "wagmi";
-import { mainnet } from "wagmi/chains";
+import { http, WagmiProvider } from "wagmi";
+import { gnosis, mainnet } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const config = getDefaultConfig({
   appName: "hackchat",
   projectId: "154c55bd97004f4320be91936e2d9fbc",
-  chains: [mainnet],
+  chains: [mainnet, gnosis],
+  transports: {
+    [mainnet.id]: http(),
+    [gnosis.id]: http(),
+  },
   ssr: false,
 });
 

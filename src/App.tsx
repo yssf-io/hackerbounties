@@ -2,6 +2,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import "./App.css";
 import { useAccount } from "wagmi";
 import { useEffect } from "react";
+import Poaps from "./components/Poaps";
 
 function App() {
   const account = useAccount();
@@ -14,8 +15,10 @@ function App() {
     <div className="h-screen">
       <h1 className="text-3xl pt-6 font-light">hackchat</h1>
 
-      {account.isConnected ? (
-        <div>user connected</div>
+      {account.address ? (
+        <div>
+          <Poaps address={account.address} />
+        </div>
       ) : (
         <div className="m-auto mt-36 w-fit">
           <ConnectButton />
