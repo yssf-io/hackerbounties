@@ -17,6 +17,9 @@ function App() {
 
       {account.address ? (
         <div>
+          <div className="flex justify-center mt-6">
+            <ConnectButton chainStatus="none" showBalance={false} />
+          </div>
           <Poaps address={account.address} />
         </div>
       ) : (

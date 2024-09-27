@@ -111,7 +111,7 @@ const Poaps = ({ address }: { address: `0x${string}` }) => {
 
   return (
     <div>
-      <div className="mt-16 mx-8">
+      <div className="mt-10 mx-8">
         <p className="mb-8 text-left text-xl font-bold">
           Hacker Pack {hackerPack ? "✅" : "❌"}
         </p>
