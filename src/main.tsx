@@ -10,7 +10,7 @@ import { gnosis, mainnet } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const config = getDefaultConfig({
-  appName: "hackchat",
+  appName: "hacker bounties",
   projectId: "154c55bd97004f4320be91936e2d9fbc",
   chains: [mainnet, gnosis],
   transports: {
